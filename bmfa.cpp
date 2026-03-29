@@ -47,16 +47,6 @@ vector<vector<int>> find_negative_cycles(vector<vector<pair<double, int>>> &adja
     vector<vector<pair<double, int>>> adj_copy = adjacency;
     auto [distances, parent] = bellmanFord(adj_copy, source);
 
-    // DEBUG
-    int n = adjacency.size();
-    int affected_count = 0;
-    for (int j = 0; j < n; j++)
-        for (auto &k : adj_copy[j])
-            if (distances[j] != 1e9 && distances[k.second] > distances[j] + k.first)
-                affected_count++;
-    cout << "DEBUG affected nodes: " << affected_count << "\n";
-    cout << "DEBUG cycle_nodes before backtrack: ";
-
     // find nodes affected by negative cycles
     unordered_set<int> affected;
     for (int j = 0; j < n; j++)
@@ -69,11 +59,6 @@ vector<vector<int>> find_negative_cycles(vector<vector<pair<double, int>>> &adja
     for (int i = 0; i < n; i++)
         for (int &node : cycle_nodes)
             if (node != -1) node = parent[node];
-
-    // DEBUG 2
-    cout << "DEBUG cycle_nodes after backtrack: " << cycle_nodes.size() << " -> ";
-    for (int node : cycle_nodes) cout << node << " ";
-    cout << "\n";
 
     // remove duplicates
     sort(cycle_nodes.begin(), cycle_nodes.end());
@@ -115,14 +100,6 @@ vector<vector<int>> find_negative_cycles(vector<vector<pair<double, int>>> &adja
     sort(all_cycles.begin(), all_cycles.end());
     all_cycles.erase(unique(all_cycles.begin(), all_cycles.end()), all_cycles.end());
 
-    // DEBUG 3
-    cout << "DEBUG all_cycles count: " << all_cycles.size() << "\n";
-    cout << "DEBUG cycles containing INR: ";
-    for (auto &c : all_cycles)
-        for (int node : c)
-            if (node == 0) { cout << "found "; break; }
-    cout << "\n";
-
     // filter — only keep INR cycles that are profitable after fees
     vector<vector<int>> result;
     for (auto &cycle : all_cycles)
@@ -149,10 +126,6 @@ vector<vector<int>> find_negative_cycles(vector<vector<pair<double, int>>> &adja
             amount *= (1.0 - fee);
             if (amount <= 0) { invalid = true; break; }
         }
-
-         // DEBUG 4
-        if (has_inr)
-            cout << "DEBUG INR cycle profit simulation: " << amount << "\n";
 
         if (!invalid && amount > 1.005)
             result.push_back(cycle);
