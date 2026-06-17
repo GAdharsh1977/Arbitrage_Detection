@@ -39,7 +39,7 @@ void ArbitrageEngine::execute_exchange(int currency1, int currency2, double requ
 
     double converted = principal * rate;
     converted -= converted * transaction_fee_pc;
-    converted = std::max(0.0, converted); // prevent negative values
+    converted = std::max(0.0, converted);
 
     std::cout << "Exchange " << principal << " from " << currency_names[currency1] << " -> " << currency_names[currency2] 
               << " @ rate " << rate << " => " << converted << "\n";

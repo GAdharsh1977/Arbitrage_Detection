@@ -72,4 +72,4 @@ std::string fetchRatesWithAPI(const std::vector<std::string> &targets, const std
     return readBuffer;
 }
 
-} // namespace APIClient
+}

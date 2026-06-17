@@ -53,7 +53,7 @@ std::vector<std::vector<std::pair<double, int>>> remove_edges(std::vector<std::v
             edges.erase(std::remove_if(edges.begin(), edges.end(),
                                   [&](const std::pair<double, int> &p) {
                                       return (p.second >= N || p.second < 0 ||
-                                              (!reachable[p.second] && p.second != source)); // keep edges to source
+                                              (!reachable[p.second] && p.second != source));
                                   }),
                         edges.end());
         }
@@ -82,7 +82,7 @@ void normalise_cycles(const std::vector<std::vector<std::pair<double, int>>> &ad
     }
     cycles = std::move(deduped);
 
-    // completing the cycle (pushing the first element of the cycle)
+    //complete the cycles.
     for (size_t i = 0; i < cycles.size(); ++i) {
         if (!cycles[i].empty())
             cycles[i].push_back(cycles[i].front());
@@ -108,21 +108,21 @@ std::vector<std::vector<std::pair<double, int>>> buildAdj(const std::string &jso
         }
 
         std::vector<double> rates(n);
-        rates[0] = 1.0; // INR base rate
+        rates[0] = 1.0; //rate for INR to INR
 
         for (int i = 1; i < n; i++) {
             std::string cur = currencies[i];
             if (rates_obj.contains(cur))
                 rates[i] = rates_obj[cur].get<double>();
             else
-                rates[i] = 0.01; // fallback rate
+                rates[i] = 0.01; //using 0.01 as fallback rate.
         }
 
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
                 if (i == j)
                     continue;
-                // Add minor noise simulation (±3% per edge)
+                //noise for simulation.
                 double noise = 1.0 + ((std::rand() % 600) - 300) * 0.0001;
                 double w = (rates[j] / rates[i]) * noise;
                 adj[i].emplace_back(std::make_pair(w, j));
@@ -148,7 +148,6 @@ std::vector<std::vector<std::pair<double, int>>> buildSimulatedAdj(const std::ve
         0.01842,  // AUD
     };
 
-    // Calculate baseline conversion rates with a default suppression factor (0.1)
     for (int i = 0; i < n; i++) {
         for (int j = 0; j < n; j++) {
             if (i == j) continue;
@@ -156,7 +155,6 @@ std::vector<std::vector<std::pair<double, int>>> buildSimulatedAdj(const std::ve
         }
     }
 
-    // Lambda helper to update a rate between two currencies
     auto setRate = [&](int from, int to, double rate) {
         for (auto &e : adj[from]) {
             if (e.second == to) {
@@ -166,6 +164,7 @@ std::vector<std::vector<std::pair<double, int>>> buildSimulatedAdj(const std::ve
         }
     };
 
+    //boost exchange rates to detect negative cycle.
     if (n >= 4) {
         setRate(0, 1, (rates[1] / rates[0]) * 1.5); // INR -> USD
         setRate(1, 2, (rates[2] / rates[1]) * 1.5); // USD -> JPY

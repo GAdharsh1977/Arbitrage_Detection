@@ -18,10 +18,10 @@ int main() {
     int iteration = 0;
     const double fee = 0.01;
     
-    // Create thread pool
+    //create the threadpool
     ThreadPool pool(std::thread::hardware_concurrency() - 1);
 
-    // Initial rates fetch to size the arbitrage engine
+    //get exchange rates and build adjacency matrix from it.
     std::string json_str = APIClient::fetchRatesWithAPI(Config::market_targets, Config::cacert);
     auto adj = GraphUtils::buildAdj(json_str, Config::market_currencies);
     
@@ -36,7 +36,7 @@ int main() {
         iteration++;
         std::cout << "iteration: " << iteration << "\n";
 
-        // Re-fetch exchange rates each iteration
+        //re-fetch rates every iteration.
         json_str = APIClient::fetchRatesWithAPI(Config::market_targets, Config::cacert);
         adj = GraphUtils::buildAdj(json_str, Config::market_currencies);
         
@@ -46,7 +46,6 @@ int main() {
             continue;
         }
 
-        // Parallel DFS cycle discovery
         auto cycles_future = pool.enqueue([&]() { 
             return Algorithms::dfs(adj, 5, 0); 
         });
@@ -55,12 +54,10 @@ int main() {
         size_t matrix_size = adj.size();
         std::vector<double> weights(matrix_size, 0.0);
         
-        // Parallel cycle normalization and deduplication
         pool.enqueue([&]() { 
             GraphUtils::normalise_cycles(adj, cycles, weights); 
         }).get();
 
-        // Parallel cycle profitability calculation
         auto neg_cycles_future = pool.enqueue([&]() { 
             return Algorithms::filter_negative_cycles_dfs(cycles, adj, weights, fee); 
         });
@@ -90,6 +87,7 @@ int main() {
             std::cout << "No profitable cycles found this iteration\n";
         }
 
+        //wait for 1s to run next iteration.
         std::this_thread::sleep_for(std::chrono::milliseconds(1000));
         std::cout << std::endl;
     }

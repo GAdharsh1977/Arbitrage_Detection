@@ -4,23 +4,21 @@
 #include <utility>
 
 namespace GraphUtils {
-    // Converts edge weights to their negative log values
+    //convert weights to log values.
     void logarithm(std::vector<std::vector<std::pair<double, int>>> &adjacency);
 
-    // Determines reachable nodes from the source currency using BFS
+    //eliminate unreachable nodes from the source
     std::vector<bool> eliminate_unnecessary(const std::vector<std::vector<std::pair<double, int>>> &adjacency, int source);
 
-    // Prunes edges going to unreachable nodes
     std::vector<std::vector<std::pair<double, int>>> remove_edges(std::vector<std::vector<std::pair<double, int>>> &adjacency, int source);
 
-    // Normalizes, rotates, and deduplicates cycles
+    //normalize, rotate, and deduplicate cycles.
     void normalise_cycles(const std::vector<std::vector<std::pair<double, int>>> &adjacency, 
                           std::vector<std::vector<int>> &cycles, 
                           std::vector<double> &weights);
 
-    // Builds the adjacency matrix from the Frankfurter JSON rates
+    //builds adjacency matrix from rates given by API.
     std::vector<std::vector<std::pair<double, int>>> buildAdj(const std::string &json_str, const std::vector<std::string> &currencies);
 
-    // Builds a simulated adjacency matrix with a hardcoded, boosted arbitrage cycle
     std::vector<std::vector<std::pair<double, int>>> buildSimulatedAdj(const std::vector<std::string> &currencies);
 }

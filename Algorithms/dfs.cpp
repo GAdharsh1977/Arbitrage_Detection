@@ -8,7 +8,7 @@
 namespace Algorithms {
 
 std::vector<std::vector<int>> dfs(std::vector<std::vector<std::pair<double, int>>> &adjacency, int max_len, int source) {
-    // Prune unreachable nodes first
+    //pruning unreachable nodes
     adjacency = GraphUtils::remove_edges(adjacency, source);
     
     std::vector<std::vector<int>> all_cycles;
@@ -20,13 +20,13 @@ std::vector<std::vector<int>> dfs(std::vector<std::vector<std::pair<double, int>
     if (source < 0 || source >= N)
         return all_cycles;
 
-    dfs_stack.push(source); // Start from source
+    dfs_stack.push(source);
 
     while (!dfs_stack.empty()) {
         int node = dfs_stack.top();
         dfs_stack.pop();
 
-        if (node == -1) { // Backtrack marker
+        if (node == -1) { //backtrack marker
             if (!path.empty()) {
                 int last = path.back();
                 path.pop_back();
@@ -39,12 +39,11 @@ std::vector<std::vector<int>> dfs(std::vector<std::vector<std::pair<double, int>
             continue;
 
         if (inPath.count(node)) {
-            // Cycle detected: from first occurrence to current node
             auto it = std::find(path.begin(), path.end(), node);
             if (it != path.end()) {
                 std::vector<int> cycle(it, path.end());
                 cycle.push_back(node);
-                if (cycle.size() >= 2) { // Only store cycles with >1 node
+                if (cycle.size() >= 2) { //cycle must have >= 2 nodes.
                     all_cycles.push_back(cycle);
                 }
             }
@@ -53,7 +52,7 @@ std::vector<std::vector<int>> dfs(std::vector<std::vector<std::pair<double, int>
 
         path.push_back(node);
         inPath.insert(node);
-        dfs_stack.push(-1); // Backtrack marker
+        dfs_stack.push(-1);
 
         for (auto it = adjacency[node].rbegin(); it != adjacency[node].rend(); ++it) {
             int neighbor = it->second;
@@ -66,7 +65,7 @@ std::vector<std::vector<int>> dfs(std::vector<std::vector<std::pair<double, int>
                 auto it2 = std::find(path.begin(), path.end(), neighbor);
                 if (it2 != path.end()) {
                     std::vector<int> cycle(it2, path.end());
-                    cycle.push_back(neighbor); // Close the cycle
+                    cycle.push_back(neighbor);
                     all_cycles.push_back(cycle);
                 }
             } else {
@@ -90,7 +89,7 @@ std::pair<std::vector<std::vector<int>>, int> filter_negative_cycles_dfs(
         if (cycles[i].size() < 2)
             continue;
 
-        // Check if INR (node 0) is in this cycle
+        //check the presence of INR
         bool has_inr = false;
         for (int node : cycles[i]) {
             if (node == 0) {
@@ -101,7 +100,6 @@ std::pair<std::vector<std::vector<int>>, int> filter_negative_cycles_dfs(
         if (!has_inr)
             continue;
 
-        // Simulate the cycle with fees
         double amount = 1.0;
         bool invalid = false;
 
@@ -139,7 +137,6 @@ std::pair<std::vector<std::vector<int>>, int> filter_negative_cycles_dfs(
         if (invalid)
             continue;
 
-        // Require at least 0.5% profit after all fees (for substantive change in output)
         if (amount > 1.005) {
             negative_cycles.push_back(cycles[i]);
             neg_profits.push_back(amount);
@@ -158,4 +155,4 @@ std::pair<std::vector<std::vector<int>>, int> filter_negative_cycles_dfs(
     return std::make_pair(negative_cycles, best_idx);
 }
 
-} // namespace Algorithms
+}
