@@ -1,0 +1,34 @@
+# Compiler outputs (Executables & Objects)
+*.exe
+*.o
+*.obj
+*.out
+*.app
+*.so
+*.dylib
+
+# Specific Executable paths
+/Core/*.exe
+/Algorithms/*.o
+/Core/*.o
+
+# Prevent Git from ignoring required pre-compiled dependency libraries (.a files)
+!/Core/lib/
+!/Core/lib/*.a
+
+# Temporary logs & diagnostics
+*.log
+Core/*.log
+Algorithms/*.log
+
+# Build & Cache directories
+build/
+bin/
+.cache/
+
+# IDE configurations
+.vscode/
+.idea/
+*.user
+*.suo
+*.sln
