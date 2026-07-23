@@ -1,6 +1,6 @@
 #include "APIClient.hpp"
 #include <iostream>
-#include <curl/curl.h>
+#include <CURL/curl.h>
 
 namespace APIClient {
 

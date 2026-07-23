@@ -43,6 +43,7 @@ public:
         std::future<return_type> res = task->get_future();
         {
             std::lock_guard<std::mutex> lock(queue_mutex);
+            if(stop) throw std::runtime_error("enqueue on stopped ThreadPool.");
             jobs.emplace([task]() { (*task)(); });
         }
         cv.notify_one();

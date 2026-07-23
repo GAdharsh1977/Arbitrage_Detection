@@ -9,5 +9,5 @@ namespace Algorithms {
         std::vector<std::vector<int>> &cycles,
         const std::vector<std::vector<std::pair<double, int>>> &adjacency,
         std::vector<double> &weights,
-        double transaction_fee_pc = 0.01);
+        double transaction_fee = 0.01);
 }

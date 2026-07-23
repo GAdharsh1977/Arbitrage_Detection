@@ -80,7 +80,7 @@ std::pair<std::vector<std::vector<int>>, int> filter_negative_cycles_dfs(
     std::vector<std::vector<int>> &cycles,
     const std::vector<std::vector<std::pair<double, int>>> &adjacency,
     std::vector<double> &weights,
-    double transaction_fee_pc) {
+    double transaction_fee) {
     
     std::vector<std::vector<int>> negative_cycles;
     std::vector<double> neg_profits;
@@ -127,7 +127,7 @@ std::pair<std::vector<std::vector<int>>, int> filter_negative_cycles_dfs(
             }
 
             amount *= rate;
-            amount *= (1.0 - transaction_fee_pc);
+            amount *= (1.0 - transaction_fee);
             if (amount <= 0) {
                 invalid = true;
                 break;

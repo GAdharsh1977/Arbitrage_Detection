@@ -20,5 +20,4 @@ namespace GraphUtils {
     //builds adjacency matrix from rates given by API.
     std::vector<std::vector<std::pair<double, int>>> buildAdj(const std::string &json_str, const std::vector<std::string> &currencies);
 
-    std::vector<std::vector<std::pair<double, int>>> buildSimulatedAdj(const std::vector<std::string> &currencies);
 }

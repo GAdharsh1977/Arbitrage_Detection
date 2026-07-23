@@ -136,43 +136,4 @@ std::vector<std::vector<std::pair<double, int>>> buildAdj(const std::string &jso
     }
 }
 
-std::vector<std::vector<std::pair<double, int>>> buildSimulatedAdj(const std::vector<std::string> &currencies) {
-    int n = currencies.size();
-    std::vector<std::vector<std::pair<double, int>>> adj(n);
-
-    
-    std::vector<double> rates = {
-        1.0,      // INR
-        0.01182,  // USD
-        1.7823,   // JPY
-        0.01842,  // AUD
-    };
-
-    for (int i = 0; i < n; i++) {
-        for (int j = 0; j < n; j++) {
-            if (i == j) continue;
-            adj[i].emplace_back((rates[j] / rates[i]) * 0.1, j);
-        }
-    }
-
-    auto setRate = [&](int from, int to, double rate) {
-        for (auto &e : adj[from]) {
-            if (e.second == to) {
-                e.first = rate;
-                return;
-            }
-        }
-    };
-
-    //boost exchange rates to detect negative cycle.
-    if (n >= 4) {
-        setRate(0, 1, (rates[1] / rates[0]) * 1.5); // INR -> USD
-        setRate(1, 2, (rates[2] / rates[1]) * 1.5); // USD -> JPY
-        setRate(2, 3, (rates[3] / rates[2]) * 1.5); // JPY -> AUD
-        setRate(3, 0, (rates[0] / rates[3]) * 1.5); // AUD -> INR
-    }
-
-    return adj;
-}
-
 } // namespace GraphUtils

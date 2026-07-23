@@ -4,7 +4,7 @@
 
 namespace Config {
     // Path to the CA certificate bundle (used by curl for SSL verification)
-    inline const std::string cacert = "Your cacert's path";
+    inline const std::string cacert = "";
 
     inline const std::vector<std::string> market_currencies = {
         "INR", "USD", "EUR", "GBP", "JPY", "AUD", "CAD", "CHF", "TRY", "ZAR",
@@ -16,10 +16,5 @@ namespace Config {
         "AUD", "USD", "EUR", "GBP", "JPY", "CAD", "CHF", "TRY", "ZAR",
         "CNY", "HKD", "SGD", "NZD", "MXN", "KRW", "BRL", "RUB", "SEK", "NOK",
         "PLN", "DKK", "MYR", "THB", "ILS"
-    };
-
-    //currencies used for bellman-ford simulation.
-    inline const std::vector<std::string> sim_currencies = {
-        "INR", "USD", "JPY", "AUD"
     };
 }

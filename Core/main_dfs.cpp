@@ -5,7 +5,8 @@
 #include <thread>
 #include <cstdlib>
 #include <ctime>
-
+#include "json.hpp"
+#include "CURL/curl.h"
 #include "Config.hpp"
 #include "ThreadPool.hpp"
 #include "ArbitrageEngine.hpp"
